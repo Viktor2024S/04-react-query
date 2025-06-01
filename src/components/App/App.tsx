@@ -12,7 +12,7 @@ import styles from "./App.module.css";
 export default function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<boolean>(false);
   const [query, setQuery] = useState<string>("");
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
@@ -24,23 +24,15 @@ export default function App() {
     const getMovies = async () => {
       try {
         setIsLoading(true);
-        setError(null);
+        setError(false);
         setMovies([]);
         const data = await fetchMovies(query);
-
         if (data.length === 0) {
           toast.error("No movies found for your request.");
         }
         setMovies(data);
-      } catch (err: unknown) {
-        let errorMessage = "An unknown error occurred.";
-
-        if (err instanceof Error) {
-          errorMessage = err.message;
-        } else if (typeof err === "string") {
-          errorMessage = err;
-        }
-        setError(errorMessage);
+      } catch {
+        setError(true);
       } finally {
         setIsLoading(false);
       }
@@ -64,14 +56,16 @@ export default function App() {
   return (
     <div className={styles.container}>
       <SearchBar onSubmit={handleSearch} />
+
       {isLoading && <Loader />}
-      {error && <ErrorMessage message={error} />}{" "}
+      {error && <ErrorMessage />}
       {movies.length > 0 && !isLoading && (
         <MovieGrid movies={movies} onSelect={handleSelectMovie} />
       )}
       {selectedMovie && (
         <MovieModal movie={selectedMovie} onClose={handleCloseModal} />
       )}
+
       <Toaster position="top-right" reverseOrder={false} />
     </div>
   );
