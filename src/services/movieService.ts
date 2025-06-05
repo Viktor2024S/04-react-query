@@ -5,18 +5,27 @@ const TMDB_TOKEN = import.meta.env.VITE_TMDB_TOKEN;
 
 axios.defaults.baseURL = "https://api.themoviedb.org/3";
 
-interface FetchMoviesResponse {
+export interface FetchMoviesResponse {
   results: Movie[];
+  total_pages: number;
 }
 
-export const fetchMovies = async (query: string): Promise<Movie[]> => {
+export const fetchMovies = async ({
+  query,
+  page,
+}: {
+  query: string;
+  page: number;
+}): Promise<FetchMoviesResponse> => {
   const response = await axios.get<FetchMoviesResponse>("/search/movie", {
     params: {
       query,
+      page,
     },
     headers: {
       Authorization: `Bearer ${TMDB_TOKEN}`,
     },
   });
-  return response.data.results;
+
+  return response.data;
 };
