@@ -33,7 +33,7 @@ export default function SearchBar({ onSubmit }: SearchBarProps) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by TMDB
+          <span className="powered-text">Powered by TMDB</span>
         </a>
 
         <form className={styles.form} onSubmit={handleSubmit}>
