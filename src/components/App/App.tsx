@@ -12,8 +12,8 @@ import MovieModal from "../MovieModal/MovieModal";
 import styles from "./App.module.css";
 
 export default function App() {
-  const [page, setPage] = useState<number>(1);
   const [query, setQuery] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
   const { data, isLoading, isError } = useQuery({
@@ -25,10 +25,18 @@ export default function App() {
   const movies = data?.results ?? [];
   const totalPages = data?.total_pages ?? 0;
 
-  const handleSearch = (newQuery: string) => {
+  const handleSearch = (formData: FormData) => {
+    const newQuery = formData.get("query") as string;
+
+    if (!newQuery) {
+      toast.error("Please enter a search query.");
+      return;
+    }
+
     if (newQuery === query) {
       return;
     }
+
     setQuery(newQuery);
     setPage(1);
   };
@@ -56,7 +64,8 @@ export default function App() {
 
   return (
     <div className={styles.container}>
-      <SearchBar onSubmit={handleSearch} />
+      <SearchBar onSearch={handleSearch} />
+
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
 
