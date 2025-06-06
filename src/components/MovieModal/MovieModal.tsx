@@ -1,4 +1,5 @@
 import { useEffect, type MouseEvent } from "react";
+import { createPortal } from "react-dom";
 import { type Movie } from "../../types/movie";
 import styles from "./MovieModal.module.css";
 
@@ -33,7 +34,7 @@ export default function MovieModal({ movie, onClose }: MovieModalProps) {
   const defaultImg =
     "https://dl-media.viber.com/10/share/2/long/vibes/icon/image/8863/8863_i.jpg";
 
-  return (
+  return createPortal(
     <div
       className={styles.backdrop}
       onClick={handleBackdropClick}
@@ -68,6 +69,7 @@ export default function MovieModal({ movie, onClose }: MovieModalProps) {
           </p>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
