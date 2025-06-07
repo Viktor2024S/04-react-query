@@ -37,12 +37,7 @@ export default function App() {
     }
   }, [data, isLoading, query, movies.length]);
 
-  const handleSearch = (formData: FormData) => {
-    const newQuery = formData.get("query") as string;
-    if (!newQuery) {
-      toast.error("Please enter a search query.");
-      return;
-    }
+  const handleSearch = (newQuery: string) => {
     if (newQuery === query) {
       return;
     }
@@ -64,7 +59,7 @@ export default function App() {
 
   return (
     <div className={styles.container}>
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar onSubmit={handleSearch} />
 
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
